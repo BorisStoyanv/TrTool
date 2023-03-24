@@ -66,8 +66,11 @@ class TradingSimulator:
         print(f"Final profit: ${profit:.2f}")
         self.update_rank(username, profit)
 
+        ranks = sorted(self.ranks.items(), key=lambda x: x[1], reverse=True)
         print("Current ranks:")
-        for user, rank in sorted(self.ranks.items(), key=lambda x: x[1], reverse=True):
+        for i, (user, rank) in enumerate(ranks[:2]):
+            print(f"#{i+1}: {user}: ${rank:.2f}")
+        for user, rank in ranks[2:]:
             print(f"{user}: ${rank:.2f}")
 
 if __name__ == "__main__":
