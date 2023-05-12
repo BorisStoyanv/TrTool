@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TradingSimulatorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/trading-simulator', [TradingSimulatorController::class, 'index']);
+Route::post('/trading-simulator', [TradingSimulatorController::class, 'simulate'])->name('simulate');
