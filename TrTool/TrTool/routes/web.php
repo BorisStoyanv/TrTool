@@ -19,5 +19,10 @@ Route::get('/', function () {
 });
 
 
-Route::get('/trading-simulator', [TradingSimulatorController::class, 'index']);
+Route::middleware(['auth'])->get('/trading-simulator', [TradingSimulatorController::class, 'index']);
 Route::post('/trading-simulator', [TradingSimulatorController::class, 'simulate'])->name('simulate');
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
