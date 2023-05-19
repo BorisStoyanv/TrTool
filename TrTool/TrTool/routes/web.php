@@ -26,3 +26,4 @@ Route::post('/trading-simulator', [TradingSimulatorController::class, 'simulate'
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/leaderboard', [App\Http\Controllers\TradingSimulatorController::class, 'leaderboard'])->name('leaderboard');
