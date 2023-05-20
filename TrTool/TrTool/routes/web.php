@@ -27,3 +27,5 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/leaderboard', [App\Http\Controllers\TradingSimulatorController::class, 'leaderboard'])->name('leaderboard');
+Route::get('/user/{user}', [App\Http\Controllers\UserController::class, 'show'])->name('user.show');
+

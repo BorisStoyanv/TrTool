@@ -15,6 +15,8 @@
         <button type="submit" name="action" value="buy">Buy</button>
         <button type="submit" name="action" value="sell">Sell</button>
         <button type="submit" name="action" value="hold">Hold</button>
+        <input type="number" id="quantity" name="quantity" step="1" min="0" value="1" required>
+
     </form>
 
     <h2>Results</h2>
