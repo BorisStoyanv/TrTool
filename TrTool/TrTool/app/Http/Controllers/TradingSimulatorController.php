@@ -71,7 +71,6 @@ class TradingSimulatorController extends Controller
     
 public function simulate(Request $request)
 {
-
     $currentPrice = session('currentPrice', rand(1, 100));
     $balance = session('balance', 1000);
     $stocks = session('stocks', 0);
@@ -133,11 +132,15 @@ public function simulate(Request $request)
     $round++;
     if ($round > 10) {
         $profit = ($balance - 1000) + ($stocks * $currentPrice);
+      
 
         if (auth()->check()) {
             $user = auth()->user();
             $user->last_played_at = now();
             $user->profit = $profit;
+            $elo = $user->elo;
+            $elo = intval(round($elo + $profit));
+            $user->elo = $elo;            
             if ($profit > $user->highest_profit) {
                 $user->highest_profit = $profit;
             }

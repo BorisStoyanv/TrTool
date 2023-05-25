@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradingSimulatorController;
-
+use App\Http\Controllers\ExperimentSimulatorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,4 +28,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/leaderboard', [App\Http\Controllers\TradingSimulatorController::class, 'leaderboard'])->name('leaderboard');
 Route::get('/user/{user}', [App\Http\Controllers\UserController::class, 'show'])->name('user.show');
+
+Route::get('/experiment-simulator', [ExperimentSimulatorController::class, 'index'])->name('experiment-simulator.index');
+Route::post('/experiment-simulator/simulate', [ExperimentSimulatorController::class, 'simulate'])->name('experiment-simulator.simulate');
+
 

@@ -12,6 +12,7 @@ class UserController extends Controller
     return view('user/show', [
         'user' => $user,
         'highestProfit' => $user->highest_profit,
+        'elo' => $user->elo,
     ]);
 }
 
