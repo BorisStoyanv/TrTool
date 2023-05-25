@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradingSimulatorController;
 use App\Http\Controllers\ExperimentSimulatorController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,5 +32,12 @@ Route::get('/user/{user}', [App\Http\Controllers\UserController::class, 'show'])
 
 Route::get('/experiment-simulator', [ExperimentSimulatorController::class, 'index'])->name('experiment-simulator.index');
 Route::post('/experiment-simulator/simulate', [ExperimentSimulatorController::class, 'simulate'])->name('experiment-simulator.simulate');
+
+Route::get('/admin/users', 'AdminController@users')->middleware('admin');
+Route::post('/admin/make-admin/{id}', [AdminController::class, 'makeAdmin'])->middleware('admin');
+Route::post('/admin/remove-admin/{id}', [AdminController::class, 'removeAdmin'])->middleware('admin');
+
+
+
 
 
