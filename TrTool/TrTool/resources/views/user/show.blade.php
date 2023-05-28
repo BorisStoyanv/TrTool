@@ -1,7 +1,6 @@
 <h1>{{ $user->name }}'s Profile</h1>
 <p>Highest Profit: ${{ $highestProfit }}</p>
 <p>ELO: {{ $elo }}</p>
-
 @php
     if ($elo < 610) {
         $rank = "Copper Cadet";
@@ -18,3 +17,13 @@
     }
 @endphp
 <p>Current Rank: {{ $rank }}</p>
+<h2>Badges:</h2>
+@foreach ($badges as $badge)
+    <div class="badge">
+        <h3>{{ $badge->name }}</h3>
+        <p>{{ $badge->description }}</p>
+        <p>{{ $badge->displayBadge() }}</p>
+    </div>
+@endforeach
+
+

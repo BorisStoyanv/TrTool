@@ -42,4 +42,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'last_played_at' => 'datetime',
     ];
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class);
+    }
+
 }

@@ -13,6 +13,7 @@ class UserController extends Controller
         'user' => $user,
         'highestProfit' => $user->highest_profit,
         'elo' => $user->elo,
+        'badges' => $user->badges,  
     ]);
 }
 
