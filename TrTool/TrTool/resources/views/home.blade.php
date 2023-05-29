@@ -15,6 +15,14 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+
+                    @if (auth()->user()->is_admin)
+                        <div class="mt-3">
+                            <a href="{{ route('admin.users') }}">Admin Dashboard</a>
+                            <a href="{{ route('badges.index') }}">Badges</a>
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>
