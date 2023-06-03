@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradingSimulatorController;
 use App\Http\Controllers\ExperimentSimulatorController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,6 +53,13 @@ Route::middleware('auth', 'admin')->group(function () {
 Route::post('admin/assign-badge', [AdminController::class, 'assignBadge'])->name('admin.assignBadge');
 Route::get('/admin/assign-badge/{user}', [App\Http\Controllers\AdminController::class, 'showAssignBadgeForm'])->name('assignBadge');
 Route::post('/admin/assign-badge/{user}', [App\Http\Controllers\AdminController::class, 'assignBadge'])->name('assignBadge.post');
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('communities', CommunityController::class);
+    Route::resource('communities.posts', PostController::class);
+    Route::resource('communities.posts.comments', CommentController::class);
+});
+
 
 
 

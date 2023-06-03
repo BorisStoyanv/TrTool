@@ -22,6 +22,7 @@
                             <a href="{{ route('badges.index') }}">Badges</a>
                         </div>
                     @endif
+               
 
                 </div>
             </div>

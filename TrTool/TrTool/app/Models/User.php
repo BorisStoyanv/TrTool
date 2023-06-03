@@ -47,4 +47,20 @@ class User extends Authenticatable
         return $this->belongsToMany(Badge::class);
     }
 
+    public function communities()
+    {
+        return $this->belongsToMany(Community::class, 'community_user');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+
 }
