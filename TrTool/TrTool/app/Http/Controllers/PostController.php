@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function create(Community $community)
     {
-        return view('communities.posts.create', compact('community'));
+        return view('posts.create', compact('community'));
     }
 
     public function store(Request $request, Community $community)
@@ -53,8 +53,13 @@ class PostController extends Controller
 
     public function destroy(Community $community, Post $post)
     {
-        $post->delete();
+        if (auth()->user()->id !== $post->user_id) {
+            abort(403);
+        }
 
-        return redirect()->route('communities.show', $community);
+        $post->delete();
+        return redirect()->route('communities.show', $community)->with('message', 'Post deleted successfully');
     }
+
+    
 }

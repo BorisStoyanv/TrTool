@@ -44,8 +44,13 @@ class CommentController extends Controller
 
     public function destroy(Community $community, Post $post, Comment $comment)
     {
-        $comment->delete();
+        if (auth()->user()->id !== $comment->user_id && auth()->user()->id !== $post->user_id) {
+            abort(403);
+        }
 
-        return redirect()->route('communities.posts.show', [$community, $post]);
+        $comment->delete();
+        return redirect()->route('communities.posts.show', [$community, $post])->with('message', 'Comment deleted successfully');
     }
+
+
 }

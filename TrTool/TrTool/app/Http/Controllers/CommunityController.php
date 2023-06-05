@@ -16,7 +16,8 @@ class CommunityController extends Controller
 
     public function show(Community $community)
     {
-        return view('communities.show', compact('community'));
+        $posts = $community->posts;
+        return view('communities.show', compact('community', 'posts'));
     }
 
     public function create()
@@ -53,10 +54,12 @@ class CommunityController extends Controller
         return redirect()->route('communities.show', $community);
     }
 
-    public function destroy(Community $community)
+        public function destroy(Community $community)
     {
+        $this->authorize('delete', $community);
         $community->delete();
 
-        return redirect()->route('communities.index');
+        return redirect()->route('communities.index')->with('status', 'Community deleted successfully.');
     }
+
 }

@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
-
+    protected $policies = [
+        Community::class => CommunityPolicy::class,
+    ];
+    
     /**
      * Bootstrap any application services.
      */
