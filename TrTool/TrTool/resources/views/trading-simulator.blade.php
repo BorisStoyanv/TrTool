@@ -46,6 +46,13 @@
     <div class="card">
             <h1 class="text-2xl mb-4">Trading Simulator</h1>
 
+            <p>Stability Index: {{ $stabilityIndex }}</p>
+            <p>Crash Likelihood: {{ $crashLikelihood }}</p>
+            <p>Geopolitical Weight: {{ $geopoliticalWeight }}</p>
+            <p>Economic Weight: {{ $economicWeight }}</p>
+            <p>Social Weight: {{ $socialWeight }}</p>
+            <p>Popularity Weight: {{ $popularityWeight }}</p>
+            <p>Restriction Weight: {{ $restrictionWeight }}</p>
             <form method="POST" action="{{ route('simulate') }}" class="text-gray-300">
                 @csrf
                 <p class="mb-4">Current price: ${{ $currentPrice }}</p>
@@ -60,7 +67,9 @@
                     <input type="number" id="quantity" name="quantity" step="1" min="0" value="1" required >
                 </div>
             </form>
-
+            @if (session('eventMessage'))
+            <p>{{ session('eventMessage') }}</p>
+             @endif
             <h2 class="text-xl mt-4">Results</h2>
             <p>Balance: ${{ $balance }}</p>
             <p>Stocks: {{ $stocks }}</p>

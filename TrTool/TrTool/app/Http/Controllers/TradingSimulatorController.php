@@ -71,6 +71,7 @@ class TradingSimulatorController extends Controller
     
 public function simulate(Request $request)
 {
+    session()->forget('eventMessage');
     $currentPrice = session('currentPrice', rand(1, 100));
     $balance = session('balance', 1000);
     $stocks = session('stocks', 0);
@@ -78,9 +79,7 @@ public function simulate(Request $request)
 
     $action = $request->input('action');
     $quantity = $request->input('quantity');
-    $profit = 0;
 
- 
     if ($action === 'buy') {
         if ($balance >= $currentPrice * $quantity) {
             $balance -= $currentPrice * $quantity;
@@ -90,7 +89,6 @@ public function simulate(Request $request)
         if ($stocks >= $quantity) {
             $balance += $currentPrice * $quantity;
             $stocks -= $quantity;
-            $profit = ($currentPrice * $quantity) - ($currentPrice * (1 - 0.05) * $quantity);
         }
     }
 
@@ -102,37 +100,50 @@ public function simulate(Request $request)
     $popularityWeight = session('popularityWeight');
     $restrictionWeight = session('restrictionWeight');
 
-
-    $totalWeight = $geopoliticalWeight + $economicWeight + $socialWeight + $popularityWeight + $restrictionWeight;
-
-
     $crashThisRound = (rand(0, 100) / 100) < $crashLikelihood;
 
-  
+    $randomFactor = rand(-50, 50) / 1000;
+    $positiveRandomFactor = abs($randomFactor);
+    $negativeRandomFactor = -abs($randomFactor);
+
     $newPrice = $currentPrice;
-    $randomFactor = rand(-100, 100) / 1000; 
+    $eventMessage = '';
 
 
-    if ($crashThisRound) {
-        $newPriceChangePercentage = -abs($randomFactor * (1 + $totalWeight)); 
-    } 
-   
-    else {
-        
-        if ($stabilityIndex > 7) { 
-            $newPriceChangePercentage = $randomFactor / 2; 
-        } 
-       
-        else { 
-            $newPriceChangePercentage = $randomFactor * (1 + $totalWeight);
-        }
+    if (rand(0, 100) / 100 < $popularityWeight) {
+        $breakthroughSize = rand(0, 100) / 100 < 0.5 ? 'small' : 'big';
+        $eventMessage .= "A $breakthroughSize technological breakthrough has occurred. ";
+        $newPrice *= (1 + ($breakthroughSize == 'small' ? $positiveRandomFactor : $positiveRandomFactor * 2));
     }
-    $newPrice = $currentPrice * (1 + $newPriceChangePercentage);
 
+  
+    if (rand(0, 100) / 100 < $geopoliticalWeight) {
+        $warSize = rand(0, 100) / 100 < 0.5 ? 'small' : 'big';
+        $eventMessage .= "A $warSize war has broken out. ";
+        $newPrice *= (1 + ($warSize == 'small' ? $negativeRandomFactor : $negativeRandomFactor * 2));
+    }
+ 
+    if (rand(0, 100) / 100 < $restrictionWeight) {
+        $restrictionChange = rand(0, 100) / 100 < 0.5 ? 'increased' : 'decreased';
+        $eventMessage .= "Restrictions have $restrictionChange. ";
+        $newPrice *= (1 + ($restrictionChange == 'increased' ? $negativeRandomFactor : $positiveRandomFactor));
+    }
+
+
+    $newPrice *= (1 + $economicWeight + $socialWeight);
+
+  
+    if ($crashThisRound) {
+        $newPrice *= (1 + $negativeRandomFactor * (1 + $geopoliticalWeight + $economicWeight + $socialWeight + $popularityWeight + $restrictionWeight));
+    }
+
+
+    session()->put('eventMessage', $eventMessage);
+
+ 
     $round++;
     if ($round > 10) {
         $profit = ($balance - 1000) + ($stocks * $currentPrice);
-      
 
         if (auth()->check()) {
             $user = auth()->user();
@@ -140,7 +151,7 @@ public function simulate(Request $request)
             $user->profit = $profit;
             $elo = $user->elo;
             $elo = intval(round($elo + $profit));
-            $user->elo = $elo;            
+            $user->elo = $elo;
             if ($profit > $user->highest_profit) {
                 $user->highest_profit = $profit;
             }
@@ -155,21 +166,30 @@ public function simulate(Request $request)
         ]);
     }
 
- 
+
     session([
         'currentPrice' => $newPrice,
         'balance' => $balance,
         'stocks' => $stocks,
         'round' => $round,
     ]);
-
     return view('trading-simulator', [
         'currentPrice' => $newPrice,
         'balance' => $balance,
         'stocks' => $stocks,
         'round' => $round,
+        'stabilityIndex' => $stabilityIndex,
+        'crashLikelihood' => $crashLikelihood,
+        'geopoliticalWeight' => $geopoliticalWeight,
+        'economicWeight' => $economicWeight,
+        'socialWeight' => $socialWeight,
+        'popularityWeight' => $popularityWeight,
+        'restrictionWeight' => $restrictionWeight,
+        'eventMessage' => $eventMessage,
     ]);
 }
+
+
 
     public function leaderboard()
     {
