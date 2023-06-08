@@ -14,6 +14,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('wind.css') }}"/>
     </head>
     <body class="antialiased">
+
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
             @if (Route::has('login'))
                 <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
@@ -127,6 +128,36 @@
 
                 </div>
             </div>
+        </div>  
+        <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+        {
+        "symbols": [
+            {
+            "proName": "FX_IDC:EURUSD",
+            "title": "EUR/USD"
+            },
+            {
+            "proName": "BITSTAMP:BTCUSD",
+            "title": "Bitcoin"
+            },
+            {
+            "proName": "BITSTAMP:ETHUSD",
+            "title": "Ethereum"
+            },
+            {
+            "description": "tesla",
+            "proName": "NASDAQ:TSLA"
+            }
+        ],
+        "showSymbolLogo": true,
+        "colorTheme": "light",
+        "isTransparent": false,
+        "displayMode": "adaptive",
+        "locale": "en"
+        }
+        </script>
         </div>
     </body>
 </html>

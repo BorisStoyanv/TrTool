@@ -102,45 +102,52 @@ public function simulate(Request $request)
 
     $crashThisRound = (rand(0, 100) / 100) < $crashLikelihood;
 
-    $randomFactor = rand(-50, 50) / 1000;
+    $randomFactor = rand(-50, 50) / 1000; 
     $positiveRandomFactor = abs($randomFactor);
     $negativeRandomFactor = -abs($randomFactor);
 
     $newPrice = $currentPrice;
-    $eventMessage = '';
+    $eventMessage = session()->get('futureEventMessage', '');
+    session()->forget('futureEventMessage'); 
 
+    $futureEventMessage = '';
 
     if (rand(0, 100) / 100 < $popularityWeight) {
         $breakthroughSize = rand(0, 100) / 100 < 0.5 ? 'small' : 'big';
-        $eventMessage .= "A $breakthroughSize technological breakthrough has occurred. ";
-        $newPrice *= (1 + ($breakthroughSize == 'small' ? $positiveRandomFactor : $positiveRandomFactor * 2));
+        $futureEventMessage .= "A $breakthroughSize technological breakthrough is expected. ";
+        $newPrice *= (1 + ($breakthroughSize == 'small' ? $negativeRandomFactor*4 : $negativeRandomFactor * 8));
     }
 
-  
     if (rand(0, 100) / 100 < $geopoliticalWeight) {
         $warSize = rand(0, 100) / 100 < 0.5 ? 'small' : 'big';
-        $eventMessage .= "A $warSize war has broken out. ";
-        $newPrice *= (1 + ($warSize == 'small' ? $negativeRandomFactor : $negativeRandomFactor * 2));
+        $futureEventMessage .= "A $warSize war is expected. ";
+        $newPrice *= (1 - ($warSize == 'small' ? $positiveRandomFactor*2 : $positiveRandomFactor * 4));
+
     }
- 
+
     if (rand(0, 100) / 100 < $restrictionWeight) {
         $restrictionChange = rand(0, 100) / 100 < 0.5 ? 'increased' : 'decreased';
-        $eventMessage .= "Restrictions have $restrictionChange. ";
-        $newPrice *= (1 + ($restrictionChange == 'increased' ? $negativeRandomFactor : $positiveRandomFactor));
+        $futureEventMessage .= "Restrictions are expected to be $restrictionChange. ";
+        $newPrice *= (1 - ($restrictionChange == 'increased' ? $positiveRandomFactor*3 : $negativeRandomFactor*3));
+    }    
+
+    if ($futureEventMessage == '') {
+        if ($stabilityIndex > 7) { 
+            $newPrice *= (1 + $randomFactor / 2);
+        } else { 
+            $newPrice *= (1 + $randomFactor);
+        }
     }
 
 
-    $newPrice *= (1 + $economicWeight + $socialWeight);
-
-  
-    if ($crashThisRound) {
-        $newPrice *= (1 + $negativeRandomFactor * (1 + $geopoliticalWeight + $economicWeight + $socialWeight + $popularityWeight + $restrictionWeight));
+    $priceCeiling = 1000 * $stabilityIndex;
+    if ($newPrice > $priceCeiling) {
+        $newPrice = $priceCeiling;
     }
-
 
     session()->put('eventMessage', $eventMessage);
+    session()->put('futureEventMessage', $futureEventMessage);
 
- 
     $round++;
     if ($round > 10) {
         $profit = ($balance - 1000) + ($stocks * $currentPrice);
