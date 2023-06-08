@@ -60,8 +60,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('communities.posts.comments', CommentController::class);
 });
 
-
-
+Route::middleware(['auth'])->get('/course/course', function () {
+    return view('course.course');
+});
 
 
 

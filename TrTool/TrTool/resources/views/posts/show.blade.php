@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
+<div class="text-white bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 min-h-screen min-w-full " >
+    <br><br><br><br><br><br><br><br>
 <div class="text-black max-w-md mx-auto bg-white shadow-md rounded-lg px-8 py-6 p-50">
     <h1 class="text-2xl font-bold mb-4">{{ $post->title }}</h1>
 
@@ -41,5 +42,5 @@
         </div>
     @endforeach
 </div>
-
+</div>
 @endsection

@@ -76,7 +76,7 @@ public function simulate(Request $request)
     $balance = session('balance', 1000);
     $stocks = session('stocks', 0);
     $round = session('round', 1);
-
+    $temp;
     $action = $request->input('action');
     $quantity = $request->input('quantity');
 
@@ -157,7 +157,16 @@ public function simulate(Request $request)
             $user->last_played_at = now();
             $user->profit = $profit;
             $elo = $user->elo;
+            $temp = $profit;
+            if($profit >= 25){
+                $profit = 25;
+            }
+            if($profit <= -30){
+                $profit = -30;
+            }
+
             $elo = intval(round($elo + $profit));
+            $profit = $temp;
             $user->elo = $elo;
             if ($profit > $user->highest_profit) {
                 $user->highest_profit = $profit;
